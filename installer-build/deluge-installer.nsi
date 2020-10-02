@@ -179,30 +179,30 @@ Section "Associate Magnet URI links with Deluge" Section3
 SectionEnd
 
 Section /o "Libtorrent 1.1.x (latest)" Section4
-    File /r C:\deluge2\libtorrent\lt1.1\*.*
+    File /r ..\libtorrent\lt1.1\*.*
 SectionEnd
 
 Section "Libtorrent 1.2.x (latest)" Section5
 SectionEnd
 
 Section /o "Libtorrent 1.2.3 (fallback)" Section5b
-    File /r C:\deluge2\libtorrent\lt1.2.3\*.*
+    File /r ..\libtorrent\lt1.2.3\*.*
 SectionEnd
 
 Section /o "Portable install" Section6
-    File /r C:\deluge2\portable\normal\*.*
+    File /r ..\portable\normal\*.*
 SectionEnd
 
 Section /o "Mantis-dark theme" Section7
-    File /r C:\deluge2\themes\mantis-dark\*.*
+    File /r ..\themes\mantis-dark\*.*
 SectionEnd
 
 Section /o "Adwaita theme" Section8
-    File /r C:\deluge2\themes\adwaita\*.*
+    File /r ..\themes\adwaita\*.*
 SectionEnd
 
 Section /o "Adwaita-dark theme" Section9
-    File /r C:\deluge2\themes\adwaita-dark\*.*
+    File /r ..\themes\adwaita-dark\*.*
 SectionEnd
 
 Section "Win32 theme" Section10
@@ -210,9 +210,9 @@ SectionEnd
 
 Section /o "GTK_CSD=0 (possibly lower performance)" Section11
 	${If} $Portable = 1 
-    File /r C:\deluge2\portable\gtk_csd\*.*
+    File /r ..\portable\gtk_csd\*.*
 	${else}
-    File /r C:\deluge2\themes\gtk_csd\*.*
+    File /r ..\themes\gtk_csd\*.*
 		${EndIf}
 SectionEnd
 
