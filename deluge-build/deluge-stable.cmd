@@ -9,9 +9,14 @@ for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
 python\Scripts\pip.exe install pygeoip
 python\Scripts\pip.exe install requests
-for /f %%i in ('echo %var2% ^| cut -c 1-3 ^| tr -d "."') do set var3=%%i
-for /f %%i in ('git ls-remote --tags --refs https://github.com/twisted/twisted ^| cut -f2 ^| sort --version-sort ^| cut -c 19- ^| tail -1') do python\Scripts\pip install https://download.lfd.uci.edu/pythonlibs/x2tqcw5k/Twisted-%%i-cp%var3%-cp%var3%-win_amd64.whl
-for /f %%i in ('git ls-remote --tags --refs https://github.com/dvarrazzo/py-setproctitle ^| cut -f2 ^| sort --version-sort ^| cut -c 19- ^| tail -1') do python\Scripts\pip install https://download.lfd.uci.edu/pythonlibs/x2tqcw5k/setproctitle-%%i-cp%var3%-cp%var3%"-win_amd64.whl
+python\Scripts\pip install gohlkegrabber
+python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
+python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
+for /f %%i in ('dir /b twisted-*-win_amd64.whl') do python\Scripts\pip install %%i
+for /f %%i in ('dir /b setproctitle-*-win_amd64.whl') do python\Scripts\pip install %%i
+python\Scripts\pip uninstall -y gohlkegrabber lxml
+del twisted-*-win_amd64.whl
+del setproctitle-*-win_amd64.whl
 copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
 python\Scripts\pip.exe install git+https://github.com/deluge-torrent/deluge@master
 for /f %%i in ('dir /b python\Lib\site-packages\deluge-*') do set var=%%i
