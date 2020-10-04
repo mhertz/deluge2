@@ -8,7 +8,7 @@ bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -S diffutils patch git p7zip --noconfirm"
 cmd /c openssl-build\openssl.cmd
-for /f %%i in ('curl https://nsis.sourceforge.io/Download ^| grep Notes ^| grep -o v.* ^| tr -d v ^| cut -d'"' -f1') do set var=%%i
+for /f %%i in ('curl https://nsis.sourceforge.io/Download ^| grep Notes ^| grep -o v.* ^| tr -d v ^| cut -d'^"' -f1') do set var=%%i
 curl -L "https://sourceforge.net/projects/nsis/files/NSIS %var:~0,1%/%var%/nsis-%var%.zip/download" >nsis-%var%.zip
 msys64\usr\lib\p7zip\7z x nsis-%var%.zip
 move nsis-%var% nsis
