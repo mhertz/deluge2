@@ -17,6 +17,13 @@ for /f %%i in ('dir /b setproctitle-*-win_amd64.whl') do python\Scripts\pip inst
 python\Scripts\pip uninstall -y gohlkegrabber lxml
 del twisted-*-win_amd64.whl
 del setproctitle-*-win_amd64.whl
+mkdir python\future
+for /f %%i in ('curl https://api.github.com/repos/PythonCharmers/python-future/releases/latest ^| grep tarball_url ^| cut -d'^"' -f4') do curl -L %%i | bsdtar -xf - -C python\future --strip-components 1
+for /f %%i in ('dir /b python\python*._pth') do echo future >> python\%%i
+python\Scripts\pip install python\future
+sed -i '/future/d' python/python*._pth
+rd /s /q python\future
+rd /s /q python\future 2>nul
 copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
 python\Scripts\pip.exe install git+https://github.com/deluge-torrent/deluge
 for /f %%i in ('dir /b python\Lib\site-packages\deluge-*') do set var=%%i
