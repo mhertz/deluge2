@@ -2,13 +2,13 @@ cd "%~dp0"
 cd..
 set PATH=%cd%\msys64\usr\bin;%PATH%
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
-mkdir python & curl -L https://www.python.org/ftp/python/%var2%/python-%var2%-embed-amd64.zip | bsdtar -xf - -C python
-sed.exe -i 's/#import/import/' python/python*._pth
+mkdir python & curl -L https://www.python.org/ftp/python/%var2%/python-%var2%-embed-amd64.zip | bsdtar xf - -C python
+sed -i 's/#import/import/' python/python*._pth
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
 for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
-python\Scripts\pip.exe install pygeoip
-python\Scripts\pip.exe install requests
+python\Scripts\pip install pygeoip
+python\Scripts\pip install requests
 python\Scripts\pip install gohlkegrabber
 python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
 python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
@@ -18,14 +18,14 @@ python\Scripts\pip uninstall -y gohlkegrabber lxml
 del twisted-*-win_amd64.whl
 del setproctitle-*-win_amd64.whl
 mkdir python\future
-for /f %%i in ('curl https://api.github.com/repos/PythonCharmers/python-future/releases/latest ^| grep tarball_url ^| cut -d'^"' -f4') do curl -L %%i | bsdtar -xf - -C python\future --strip-components 1
+for /f %%i in ('curl https://api.github.com/repos/PythonCharmers/python-future/releases/latest ^| grep tarball_url ^| cut -d'^"' -f4') do curl -L %%i | bsdtar xf - -C python\future --strip-components 1
 for /f %%i in ('dir /b python\python*._pth') do echo future >> python\%%i
 python\Scripts\pip install python\future
 sed -i '/future/d' python/python*._pth
 rd /s /q python\future
 rd /s /q python\future 2>nul
 copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
-python\Scripts\pip.exe install git+https://github.com/deluge-torrent/deluge@master
+python\Scripts\pip install git+https://github.com/deluge-torrent/deluge@master
 for /f %%i in ('dir /b python\Lib\site-packages\deluge-*') do set var=%%i
 patch python/Lib/site-packages/twisted/internet/_glibbase.py < deluge-build\_glibbase.patch
 patch python/Lib/site-packages/deluge/ui/client.py < deluge-build\client.patch
@@ -36,8 +36,8 @@ patch python/Lib/site-packages/deluge/core/torrentmanager.py < deluge-build\2.0.
 patch python/Lib/site-packages/deluge/argparserbase.py < deluge-build\2.0.3-argparserbase.patch
 patch python/Lib/site-packages/deluge/ui/gtk3/glade/main_window.tabs.ui < deluge-build\2.0.3-main_window.tabs.ui.patch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\2.0.3-log.patch
-curl https://github.com/deluge-torrent/deluge/commit/23b019e39c151d76933057c7a237c6f2193cf88e.patch | patch.exe -d python/Lib/site-packages -p1 --no-backup-if-mismatch
-curl https://git.deluge-torrent.org/deluge/patch/?id=4b29436cd5eabf9af271f3fa6250cd7c91cdbc9d | patch.exe -d python/Lib/site-packages -p1 --no-backup-if-mismatch
+curl https://github.com/deluge-torrent/deluge/commit/23b019e39c151d76933057c7a237c6f2193cf88e.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
+curl https://git.deluge-torrent.org/deluge/patch/?id=4b29436cd5eabf9af271f3fa6250cd7c91cdbc9d | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch

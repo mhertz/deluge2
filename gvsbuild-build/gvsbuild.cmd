@@ -11,7 +11,7 @@ set arch=amd64
 set VSCMD_DEBUG=1
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
-mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar -xf - -C python --include tools --strip-components 1
+mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 rem msys64\usr\bin\echo %BUILD_DIR%/build/x64/release/libcroco/win32 >> python\python%PYTHONVER%._pth
 rem msys64\usr\bin\echo -e Lib\nDLLs\nimport site >> python\python%PYTHONVER%._pth
 rem sed -i 's.\\\./.g' python\python%PYTHONVER%._pth
@@ -70,14 +70,14 @@ del gtk-build\gtk\x64\release\lib\gobject-introspection\giscanner\_giscanner.pdb
 move overlay\data\bin\msvcp140.dll gtk-build\gtk\x64\release\bin
 move overlay\data\etc\gtk-3.0\settings.ini gtk-build\gtk\x64\release\etc\gtk-3.0
 rd /s /q  overlay\data
-rd /s /q  overlay\data
+rd /s /q  overlay\data 2>nul
 move gtk-build\gtk\x64\release overlay\data
-rem rd /s /q gtk-build
-rem rd /s /q gtk-build
+rd /s /q gtk-build
+rd /s /q gtk-build 2>nul
 for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do rd /s /q %%i\data
-for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do rd /s /q %%i\data
+for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do rd /s /q %%i\data 2>nul
 for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i\data
-for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i\data
+for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i\data 2>nul
 for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do xcopy /ehq overlay\data %%i\data\
 for /f %%i in ('dir /b deluge-2* ^| findstr dev') do xcopy /ehq overlay\data %%i\data\
 pause
