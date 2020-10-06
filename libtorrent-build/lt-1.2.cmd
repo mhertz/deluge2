@@ -4,10 +4,7 @@ set BOOST_ROOT=%cd%\boost
 set OPENSSL=%cd%\OpenSSL-Win64
 set BOOST_BUILD_PATH=%BOOST_ROOT%\tools\build
 set PATH=%PATH%;%BOOST_BUILD_PATH%\src\engine\bin.ntx86;%BOOST_ROOT%;%cd%\python;%cd%\msys64\usr\bin
-curl -LO https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.7z
-bsdtar boost_*.7z
-del boost_*.7z
-move boost_* boost
+mkdir boost & curl -L https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.zip | bsdtar xf - --strip-components 1 -C boost
 git clone https://github.com/arvidn/libtorrent -b RC_1_2 lt
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
