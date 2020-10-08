@@ -16,9 +16,7 @@ rem msys64\usr\bin\echo %BUILD_DIR%/build/x64/release/libcroco/win32 >> python\p
 rem msys64\usr\bin\echo -e Lib\nDLLs\nimport site >> python\python%PYTHONVER%._pth
 rem sed -i 's.\\\./.g' python\python%PYTHONVER%._pth
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
-pushd "%programfiles(x86)%\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build"
-call vcvars64.bat
-popd
+call msvc\VC\Auxiliary\Build\vcvars64.bat
 git clone https://github.com/wingtk/gvsbuild gtk-build\github\gvsbuild
 pushd gtk-build\github\gvsbuild
 copy "%~dp0win32.patch" patches\gtk3-24

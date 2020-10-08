@@ -11,7 +11,7 @@ for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 msys64\usr\bin\echo -e "Lib\nDLLs\nimport site" >> python\python%PYTHONVER%._pth
 patch --binary boost/libs/python/src/converter/builtin_converters.cpp < "%~dp01.1-builtin_converters.patch"
-call "%programfiles(x86)%\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+call msvc\VC\Auxiliary\Build\vcvars64.bat
 pushd boost
 call bootstrap.bat
 popd

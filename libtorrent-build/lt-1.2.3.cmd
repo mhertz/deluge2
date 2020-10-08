@@ -10,7 +10,7 @@ for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 msys64\usr\bin\echo -e "Lib\nDLLs\nimport site" >> python\python%PYTHONVER%._pth
-call "%programfiles(x86)%\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+call msvc\VC\Auxiliary\Build\vcvars64.bat
 pushd boost
 call bootstrap.bat
 popd

@@ -24,7 +24,7 @@ Unicode true
 !include StrContains.nsh
 
 # Python files generated with bbfreeze
-!define BUILD_DIR "$%onedrive%\Deluge2"
+!define BUILD_DIR "..\"
 !define BBFREEZE_DIR "${BUILD_DIR}\deluge-bbfreeze-${PROGRAM_VERSION}"
 !define INSTALLER_FILENAME "deluge-${PROGRAM_VERSION}.exe"
 
