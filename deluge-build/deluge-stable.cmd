@@ -9,7 +9,6 @@ for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
 python\Scripts\pip install pygeoip
 python\Scripts\pip install requests
-rem python\Scripts\pip install windows-curses
 python\Scripts\pip install deluge-build\lxml-4.5.2-cp39-cp39-win_amd64.whl
 python\Scripts\pip install gohlkegrabber
 python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
@@ -44,7 +43,6 @@ patch python/Lib/site-packages/deluge/log.py < deluge-build\2.0.3-log.patch
 curl https://github.com/deluge-torrent/deluge/commit/23b019e39c151d76933057c7a237c6f2193cf88e.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 curl https://git.deluge-torrent.org/deluge/patch/?id=4b29436cd5eabf9af271f3fa6250cd7c91cdbc9d | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
-patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
 copy python\Scripts\deluge.exe python
