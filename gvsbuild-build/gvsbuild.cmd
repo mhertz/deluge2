@@ -2,6 +2,7 @@ cd "%~dp0"
 cd ..
 set DOWNLOAD_DIR="%cd%\gtk-cache"
 set BUILD_DIR="%cd%\gtk-build"
+set MSVC_DIR="%cd%\msvc"
 set PYTHONPATH="%cd%\python"
 set MSYSPATH="%cd%\msys64\usr\bin"
 set PATH=%PYTHONPATH%;%PYTHONPATH%\Scripts;%cd%\gtk-build\gtk\x64\release\bin;%MSYSPATH%;%PATH%
@@ -28,7 +29,7 @@ rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash
 del %DOWNLOAD_DIR%\git\gtk3-*
-python -E build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --python-dir="%PYTHONPATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
+python -E build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path="%MSVC_DIR%" --python-dir="%PYTHONPATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
 popd
 rd /s /q python
 rd /s /q python
