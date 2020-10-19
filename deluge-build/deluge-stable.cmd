@@ -9,18 +9,14 @@ for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
 python\Scripts\pip install pygeoip
 python\Scripts\pip install requests
-python\Scripts\pip install deluge-build\lxml-4.5.2-cp39-cp39-win_amd64.whl
 python\Scripts\pip install gohlkegrabber
 python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
 python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
-python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'pillow')"
 for /f %%i in ('dir /b twisted-*-win_amd64.whl') do python\Scripts\pip install %%i
 for /f %%i in ('dir /b setproctitle-*-win_amd64.whl') do python\Scripts\pip install %%i
-for /f %%i in ('dir /b pillow-*-win_amd64.whl') do python\Scripts\pip install %%i
 python\Scripts\pip uninstall -y gohlkegrabber lxml
 del twisted-*-win_amd64.whl
 del setproctitle-*-win_amd64.whl
-del pillow-*-win_amd64.whl
 mkdir python\future
 for /f %%i in ('curl https://api.github.com/repos/PythonCharmers/python-future/releases/latest ^| grep tarball_url ^| cut -d'^"' -f4') do curl -L %%i | bsdtar xf - -C python\future --strip-components 1
 for /f %%i in ('dir /b python\python*._pth') do echo future >> python\%%i
