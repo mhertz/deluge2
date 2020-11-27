@@ -29,7 +29,6 @@ rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash
 del %DOWNLOAD_DIR%\git\gtk3-*
-curl https://github.com/wingtk/gvsbuild/commit/ae2fd0f5215b7aefdede6871a6e4bd2b2e6a6b34.patch | patch.exe -R -p1
 curl https://github.com/wingtk/gvsbuild/commit/eb2c51a9de7796cd9ef7bd37489a367a1a0e1a24.patch | patch.exe -R -p1
 python -E build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path="%MSVC_DIR%" --python-dir="%PYTHONPATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
 popd
