@@ -18,8 +18,8 @@ rem msys64\usr\bin\echo -e Lib\nDLLs\nimport site >> python\python%PYTHONVER%._p
 rem sed -i 's.\\\./.g' python\python%PYTHONVER%._pth
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
 call msvc\VC\Auxiliary\Build\vcvars64.bat
-git clone https://github.com/wingtk/gvsbuild gtk-build\github\gvsbuild
-pushd gtk-build\github\gvsbuild
+git clone https://github.com/wingtk/gvsbuild gtk-build\gvsbuild
+pushd gtk-build\gvsbuild
 copy "%~dp0win32.patch" patches\gtk3-24
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
