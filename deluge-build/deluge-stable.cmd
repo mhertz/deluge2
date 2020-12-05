@@ -10,8 +10,8 @@ for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Script
 python\Scripts\pip install pygeoip
 python\Scripts\pip install requests
 python\Scripts\pip install gohlkegrabber
-python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
-python\python -c "from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
+python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
+python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
 for /f %%i in ('dir /b twisted-*-win_amd64.whl') do python\Scripts\pip install %%i
 for /f %%i in ('dir /b setproctitle-*-win_amd64.whl') do python\Scripts\pip install %%i
 python\Scripts\pip uninstall -y gohlkegrabber lxml
