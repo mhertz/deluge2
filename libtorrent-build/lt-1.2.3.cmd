@@ -1,6 +1,8 @@
 cd "%~dp0"
 cd..
 set BOOST_ROOT=%cd%\boost
+set PYTHON_ROOT=%cd%\python
+set PYTHON_ROOT2="%PYTHON_ROOT:\=/%"
 set OPENSSL=%cd%\OpenSSL-Win64
 set BOOST_BUILD_PATH=%BOOST_ROOT%\tools\build
 set PATH=%PATH%;%BOOST_BUILD_PATH%\src\engine\bin.ntx86;%BOOST_ROOT%;%cd%\python;%cd%\msys64\usr\bin
@@ -15,6 +17,7 @@ pushd boost
 call bootstrap.bat
 popd
 pushd lt\bindings\python
+echo using python : %PYTHONVER2% : %PYTHON_ROOT2% : %PYTHON_ROOT2%/include : %PYTHON_ROOT2%/libs ; > %BOOST_BUILD_PATH%\user-config.jam
 b2 crypto=openssl libtorrent-link=static boost-link=static release optimization=space stage_module --abbreviate-paths -j4 address-model=64 openssl-include=%OPENSSL%\include openssl-lib=%OPENSSL%\lib
 popd
 move /y lt\bindings\python\libtorrent.pyd libtorrent\lt1.2.3\Lib\site-packages
