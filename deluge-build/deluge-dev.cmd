@@ -31,10 +31,14 @@ patch python/Lib/site-packages/twisted/internet/_glibbase.py < deluge-build\_gli
 patch python/Lib/site-packages/deluge/ui/client.py < deluge-build\client.patch
 patch python/Lib/site-packages/deluge/ui/gtk3/common.py < deluge-build\common.patch
 patch python/Lib/site-packages/deluge/core/preferencesmanager.py < deluge-build\preferencesmanager.patch
-curl https://github.com/deluge-torrent/deluge/commit/23b019e39c151d76933057c7a237c6f2193cf88e.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
+curl https://github.com/deluge-torrent/deluge/commit/543a91bd9b06ceb3eee35ff4e7e8f0225ee55dc5.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
+bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
+curl https://github.com/deluge-torrent/deluge/commit/afc22029647a30f2a65f7aa7740ff32ab089fdfe.patch | patch -p4
+bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
+rd /s /q EGG-INFO deluge_execute
 copy python\Scripts\deluge.exe python
 copy python\Scripts\deluge-console.exe python
 copy python\Scripts\deluged.exe python
@@ -69,8 +73,8 @@ rd /s /q python\libs
 rd /s /q python\include
 rd /s /q python\Tools
 rd /s /q python\tcl
-for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i
-for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i 2>nul
+for /f %%i in ('dir /b /a:d deluge-2* ^| findstr dev') do rd /s /q %%i
+for /f %%i in ('dir /b /a:d deluge-2* ^| findstr dev') do rd /s /q %%i 2>nul
 xcopy /ehq python %var:~0,-10%\
 rd /s /q python
 rd /s /q python 2>nul

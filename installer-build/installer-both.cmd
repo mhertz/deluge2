@@ -2,8 +2,8 @@ cd "%~dp0"
 pushd..
 set PATH=%cd%\msys64\usr\bin;%PATH%
 popd
-for /f %%i in ('dir /b ..\deluge-2* ^| findstr /v dev') do set var1=%%i
-for /f %%i in ('dir /b ..\deluge-2* ^| findstr dev') do set var2=%%i
+for /f %%i in ('dir /b /a:d ..\deluge-2* ^| findstr /v dev') do set var1=%%i
+for /f %%i in ('dir /b /a:d ..\deluge-2* ^| findstr dev') do set var2=%%i
 curl https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz | gzip -d -c > ..\%var1%\GeoIP.dat
 curl https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz | gzip -d -c > ..\%var2%\GeoIP.dat
 del ..\deluge-*.exe 2>nul
