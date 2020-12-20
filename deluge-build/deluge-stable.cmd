@@ -25,6 +25,7 @@ python\Scripts\pip install python\future
 sed -i '/future/d' python/python*._pth
 rd /s /q python\future
 rd /s /q python\future 2>nul
+copy /y loaders\cli\* python\Lib\site-packages\pip\_vendor\distlib
 python\Scripts\pip install git+https://github.com/deluge-torrent/deluge@master
 copy python\Scripts\deluge-console.exe python
 copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
