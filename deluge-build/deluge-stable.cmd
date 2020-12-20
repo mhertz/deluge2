@@ -9,6 +9,7 @@ for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip.exe install deluge-build\%%i
 python\Scripts\pip install pygeoip
 python\Scripts\pip install requests
+python\Scripts\pip install windows-curses
 python\Scripts\pip install gohlkegrabber
 python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
 python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
@@ -24,8 +25,10 @@ python\Scripts\pip install python\future
 sed -i '/future/d' python/python*._pth
 rd /s /q python\future
 rd /s /q python\future 2>nul
-copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
 python\Scripts\pip install git+https://github.com/deluge-torrent/deluge@master
+copy python\Scripts\deluge-console.exe python
+copy /y loaders\* python\Lib\site-packages\pip\_vendor\distlib
+python\Scripts\pip install --ignore-installed --no-deps git+https://github.com/deluge-torrent/deluge@master
 for /f %%i in ('dir /b python\Lib\site-packages\deluge-*') do set var=%%i
 patch python/Lib/site-packages/twisted/internet/_glibbase.py < deluge-build\_glibbase.patch
 patch python/Lib/site-packages/deluge/ui/client.py < deluge-build\client.patch
@@ -39,6 +42,7 @@ patch python/Lib/site-packages/deluge/log.py < deluge-build\2.0.3-log.patch
 patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch < deluge-build\2.0.3-543a91bd9b06ceb3eee35ff4e7e8f0225ee55dc5.patch
 curl https://git.deluge-torrent.org/deluge/patch/?id=4b29436cd5eabf9af271f3fa6250cd7c91cdbc9d | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
+patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
 bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
@@ -46,7 +50,6 @@ curl https://github.com/deluge-torrent/deluge/commit/afc22029647a30f2a65f7aa7740
 bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
 rd /s /q EGG-INFO deluge_execute
 copy python\Scripts\deluge.exe python
-copy python\Scripts\deluge-console.exe python
 copy python\Scripts\deluged.exe python
 copy python\Scripts\deluged-debug.exe python
 copy python\Scripts\deluge-debug.exe python
