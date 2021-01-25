@@ -1,0 +1,14 @@
+diff -urN a/main_window.ui b/main_window.ui
+--- a/main_window.ui	2020-12-20 19:47:19.208183400 +0100
++++ b/main_window.ui	2021-01-19 20:54:27.816401000 +0100
+@@ -762,8 +762,8 @@
+                   <object class="GtkNotebook" id="torrent_info">
+                     <property name="visible">True</property>
+                     <property name="can_focus">False</property>
+-                    <property name="tab_pos">left</property>
+-                    <property name="show_border">False</property>
++                    <property name="tab_pos">top</property>
++                    <property name="show_border">True</property>
+                     <property name="scrollable">True</property>
+                   </object>
+                   <packing>

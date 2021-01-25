@@ -1,0 +1,12 @@
+diff -urN a/preferencesmanager.py b/preferencesmanager.py
+--- a/preferencesmanager.py	2021-01-19 20:10:43.507786400 +0100
++++ b/preferencesmanager.py	2021-01-19 21:32:45.873731000 +0100
+@@ -221,7 +221,7 @@
+         if self.config['listen_interface']:
+             interfaces = self.config['listen_interface'].strip()
+         else:
+-            interfaces = '0.0.0.0'
++            interfaces = '0.0.0.0,::'
+ 
+         lib_interfaces = []
+         for interface in interfaces.split(','):

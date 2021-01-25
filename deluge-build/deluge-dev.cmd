@@ -10,6 +10,7 @@ for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Script
 python\Scripts\pip install pygeoip
 python\Scripts\pip install requests
 python\Scripts\pip install windows-curses
+python\Scripts\pip install pygame
 python\Scripts\pip install gohlkegrabber
 python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'twisted')"
 python\python -c "import ssl; ssl._create_default_https_context = ssl._create_unverified_context; from gohlkegrabber import GohlkeGrabber; gg = GohlkeGrabber(); gg.retrieve('.', 'setproctitle')"
@@ -44,6 +45,15 @@ bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
 curl https://github.com/deluge-torrent/deluge/commit/afc22029647a30f2a65f7aa7740ff32ab089fdfe.patch | patch -p4
 bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
 rd /s /q EGG-INFO deluge_execute
+patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch < deluge-build\48040b1fe76e17e0776418bfd8bc88bd27013a84.patch
+bsdtar xf python/Lib/site-packages/deluge/plugins/Notifications*.egg
+patch -p1 -d deluge_notifications < deluge-build\notifications.patch
+bsdtar cf python/Lib/site-packages/deluge/plugins/Notifications* --format zip EGG-INFO deluge_notifications
+rd /s /q EGG-INFO deluge_notifications
+patch -p1 -d python/Lib/site-packages/deluge/ui/gtk3/glade -p1 < deluge-build\tabs.patch
+curl https://github.com/deluge-torrent/deluge/commit/b27ad9126655ca758e232e89dce70d6bdf69bd3b.patch | patch -d python/Lib/site-packages -p1
+curl https://github.com/deluge-torrent/deluge/commit/0e48c9712d579acfe3064b011d61ffef84c2bef5.patch | patch -d python/Lib/site-packages -p1
+patch -p1 -d python/Lib/site-packages/deluge/core -p1 < deluge-build\listen.patch
 copy python\Scripts\deluge.exe python
 copy python\Scripts\deluged.exe python
 copy python\Scripts\deluged-debug.exe python

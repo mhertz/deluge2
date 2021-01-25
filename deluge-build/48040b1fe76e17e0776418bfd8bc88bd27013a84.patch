@@ -1,0 +1,186 @@
+From 48040b1fe76e17e0776418bfd8bc88bd27013a84 Mon Sep 17 00:00:00 2001
+From: Christophe David <david.christophe@protonmail.com>
+Date: Wed, 19 Aug 2020 19:48:43 +0200
+Subject: [PATCH] manage coma separated list of incoming interfaces allow to
+ configure up to 100 characters in gtk outgoing interfaces control instead of
+ 15, which was too small for IP v6 addresses
+
+---
+ deluge/core/preferencesmanager.py             | 28 +++++++++++++++----
+ deluge/ui/gtk3/glade/preferences_dialog.ui    | 16 +++++------
+ deluge/ui/gtk3/preferences.py                 |  4 +--
+ .../js/deluge-all-debug.js                    | 18 +++---------
+ 4 files changed, 35 insertions(+), 31 deletions(-)
+
+diff --git a/deluge/core/preferencesmanager.py b/deluge/core/preferencesmanager.py
+index db9556acc..802ea865c 100644
+--- a/deluge/core/preferencesmanager.py
++++ b/deluge/core/preferencesmanager.py
+@@ -10,6 +10,7 @@
+ 
+ from __future__ import unicode_literals
+ 
++import ipaddress
+ import logging
+ import os
+ import platform
+@@ -214,24 +215,39 @@ def __set_listen_on(self):
+             listen_ports = self.config['listen_ports']
+ 
+         if self.config['listen_interface']:
+-            interface = self.config['listen_interface'].strip()
++            interfaces = self.config['listen_interface'].strip()
+         else:
+-            interface = '0.0.0.0'
++            interfaces = '0.0.0.0'
++
++        lib_interfaces = []
++        for interface in interfaces.split(','):
++            interface = interface.strip()
++            try:
++                # add square brackets to ipv6 only, as needed by lib torrent
++                lib_interfaces.append(
++                    '[' + interface + ']'
++                    if ipaddress.ip_address(interface).version == 6
++                    else interface
++                )
++            except ValueError:
++                # ip address format failed, assume network interface name
++                lib_interfaces.append(interface)
+ 
+         log.debug(
+             'Listen Interface: %s, Ports: %s with use_sys_port: %s',
+-            interface,
++            lib_interfaces,
+             listen_ports,
+             self.config['listen_use_sys_port'],
+         )
+-        interfaces = [
+-            '%s:%s' % (interface, port)
++        interface_port_list = [
++            '%s:%s' % (lib_interface, port)
+             for port in range(listen_ports[0], listen_ports[1] + 1)
++            for lib_interface in lib_interfaces
+         ]
+         self.core.apply_session_settings(
+             {
+                 'listen_system_port_fallback': self.config['listen_use_sys_port'],
+-                'listen_interfaces': ''.join(interfaces),
++                'listen_interfaces': ','.join(interface_port_list),
+             }
+         )
+ 
+diff --git a/deluge/ui/gtk3/glade/preferences_dialog.ui b/deluge/ui/gtk3/glade/preferences_dialog.ui
+index 1882521fd..82cba1522 100644
+--- a/deluge/ui/gtk3/glade/preferences_dialog.ui
++++ b/deluge/ui/gtk3/glade/preferences_dialog.ui
+@@ -2555,9 +2555,9 @@ used sparingly.</property>
+                                       <object class="GtkEntry" id="entry_interface">
+                                         <property name="visible">True</property>
+                                         <property name="can_focus">True</property>
+-                                        <property name="tooltip_text" translatable="yes">The IP address of the interface to listen for incoming bittorrent connections on. Leave this empty if you want to use the default.</property>
+-                                        <property name="max_length">15</property>
+-                                        <property name="width_chars">15</property>
++                                        <property name="tooltip_text" translatable="yes">Coma separated list of IP addresses / network interface names to be listened for incoming bittorrent connections. Leave this empty if you want to use the default.</property>
++                                        <property name="max_length">100</property>
++                                        <property name="width_chars">30</property>
+                                         <property name="truncate_multiline">True</property>
+                                         <property name="primary_icon_activatable">False</property>
+                                         <property name="secondary_icon_activatable">False</property>
+@@ -2569,7 +2569,7 @@ used sparingly.</property>
+                                   <object class="GtkLabel" id="label110">
+                                     <property name="visible">True</property>
+                                     <property name="can_focus">False</property>
+-                                    <property name="label" translatable="yes">Incoming Address</property>
++                                    <property name="label" translatable="yes">Incoming Interfaces</property>
+                                     <attributes>
+                                       <attribute name="weight" value="bold"/>
+                                     </attributes>
+@@ -2775,12 +2775,10 @@ used sparingly.</property>
+                                       <object class="GtkEntry" id="entry_outgoing_interface">
+                                         <property name="visible">True</property>
+                                         <property name="can_focus">True</property>
+-                                        <property name="tooltip_text" translatable="yes">
+-The network interface name or IP address for outgoing BitTorrent connections. (Leave empty for default.)
+-                                        </property>
+-                                        <property name="max_length">15</property>
++                                        <property name="tooltip_text" translatable="yes">Coma separated list of allowed IP addresses / network interface names for outgoing bittorrent TCP connections. Leave this empty if you want to use the default.</property>
++                                        <property name="max_length">100</property>
+                                         <property name="invisible_char">●</property>
+-                                        <property name="width_chars">15</property>
++                                        <property name="width_chars">30</property>
+                                         <property name="truncate_multiline">True</property>
+                                         <property name="primary_icon_activatable">False</property>
+                                         <property name="secondary_icon_activatable">False</property>
+diff --git a/deluge/ui/gtk3/preferences.py b/deluge/ui/gtk3/preferences.py
+index b4d3f521c..2a56309aa 100644
+--- a/deluge/ui/gtk3/preferences.py
++++ b/deluge/ui/gtk3/preferences.py
+@@ -677,8 +677,8 @@ def set_config(self, hide=False):
+             'chk_random_outgoing_ports'
+         ).get_active()
+         incoming_address = self.builder.get_object('entry_interface').get_text().strip()
+-        if deluge.common.is_ip(incoming_address) or not incoming_address:
+-            new_core_config['listen_interface'] = incoming_address
++
++        new_core_config['listen_interface'] = incoming_address
+         new_core_config['outgoing_interface'] = (
+             self.builder.get_object('entry_outgoing_interface').get_text().strip()
+         )
+diff --git a/deluge/ui/web/js/deluge-all-debug.js b/deluge/ui/web/js/deluge-all-debug.js
+index 651ba4f0b..9d38a2f01 100644
+--- a/deluge/ui/web/js/deluge-all-debug.js
++++ b/deluge/ui/web/js/deluge-all-debug.js
+@@ -9,15 +9,6 @@
+  */
+ Ext.namespace('Deluge.preferences');
+ 
+-// custom Vtype for vtype:'IPAddress'
+-Ext.apply(Ext.form.VTypes, {
+-    IPAddress: function(v) {
+-        return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v);
+-    },
+-    IPAddressText: 'Must be a numeric IP address',
+-    IPAddressMask: /[\d\.]/i,
+-});
+-
+ /**
+  * @class Deluge.preferences.Network
+  * @extends Ext.form.FormPanel
+@@ -35,7 +26,7 @@ Deluge.preferences.Network = Ext.extend(Ext.form.FormPanel, {
+         fieldset = this.add({
+             xtype: 'fieldset',
+             border: false,
+-            title: _('Incoming Address'),
++            title: _('Incoming Interfaces (coma separated)'),
+             style: 'margin-bottom: 5px; padding-bottom: 0px;',
+             autoHeight: true,
+             labelWidth: 1,
+@@ -47,8 +38,7 @@ Deluge.preferences.Network = Ext.extend(Ext.form.FormPanel, {
+                 name: 'listen_interface',
+                 fieldLabel: '',
+                 labelSeparator: '',
+-                width: 200,
+-                vtype: 'IPAddress',
++                width: 250,
+             })
+         );
+ 
+@@ -98,7 +88,7 @@ Deluge.preferences.Network = Ext.extend(Ext.form.FormPanel, {
+         fieldset = this.add({
+             xtype: 'fieldset',
+             border: false,
+-            title: _('Outgoing Interface'),
++            title: _('Outgoing Interfaces (coma separated)'),
+             style: 'margin-bottom: 5px; padding-bottom: 0px;',
+             autoHeight: true,
+             labelWidth: 1,
+@@ -110,7 +100,7 @@ Deluge.preferences.Network = Ext.extend(Ext.form.FormPanel, {
+                 name: 'outgoing_interface',
+                 fieldLabel: '',
+                 labelSeparator: '',
+-                width: 40,
++                width: 250,
+             })
+         );
+ 

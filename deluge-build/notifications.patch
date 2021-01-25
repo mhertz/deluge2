@@ -1,0 +1,28 @@
+diff -urN a/core.py b/core.py
+--- a/core.py	2021-01-19 19:52:12.415109090 +0100
++++ b/core.py	2021-01-03 14:36:28.000000000 +0100
+@@ -175,19 +175,19 @@
+ 
+     def _on_torrent_finished_event(self, torrent_id):
+         log.debug('Handler for TorrentFinishedEvent called for CORE')
+-        torrent = component.get('TorrentManager')[torrent_id]
+-        torrent_status = torrent.get_status({})
++        torrent = component.get('TorrentManager')[torrent_id].get_name()
++        #torrent_status = torrent.get_status({})
+         # Email
+-        subject = _('Finished Torrent "%(name)s"') % torrent_status
++        subject = _('Finished Torrent "%s"') % torrent
+         message = (
+             _(
+                 'This email is to inform you that Deluge has finished '
+-                'downloading "%(name)s", which includes %(num_files)i files.'
++                'downloading "%s".'
+                 '\nTo stop receiving these alerts, simply turn off email '
+                 "notification in Deluge's preferences.\n\n"
+                 'Thank you,\nDeluge.'
+             )
+-            % torrent_status
++            % torrent
+         )
+         return subject, message
+ 

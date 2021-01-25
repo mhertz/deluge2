@@ -27,9 +27,9 @@
 +                self.core.geoip_instance = GeoIP(geoipdb_path, 0)
 +            except AttributeError:
 +                log.warning('GeoIP Unavailable')
-+        elif os.path.exists('../GeoIP.dat'):
++        elif os.path.exists('GeoIP.dat'):
 +            try:
-+                self.core.geoip_instance = GeoIP('../GeoIP.dat', 0)
++                self.core.geoip_instance = GeoIP('GeoIP.dat', 0)
              except AttributeError:
                  log.warning('GeoIP Unavailable')
          else:
