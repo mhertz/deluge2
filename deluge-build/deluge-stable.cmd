@@ -48,7 +48,7 @@ patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-buil
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
 bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
-curl https://github.com/deluge-torrent/deluge/commit/afc22029647a30f2a65f7aa7740ff32ab089fdfe.patch | patch -p4
+curl https://github.com/deluge-torrent/deluge/commit/9c90136f57b607937a6deb64481e6785421fd455.patch | patch -p4
 bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
 rd /s /q EGG-INFO deluge_execute
 bsdtar xf python/Lib/site-packages/deluge/plugins/Notifications*.egg

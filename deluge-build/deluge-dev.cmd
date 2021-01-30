@@ -41,10 +41,6 @@ patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
 patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
 patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
-bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
-curl https://github.com/deluge-torrent/deluge/commit/afc22029647a30f2a65f7aa7740ff32ab089fdfe.patch | patch -p4
-bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
-rd /s /q EGG-INFO deluge_execute
 patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch < deluge-build\48040b1fe76e17e0776418bfd8bc88bd27013a84.patch
 bsdtar xf python/Lib/site-packages/deluge/plugins/Notifications*.egg
 patch -p1 -d deluge_notifications < deluge-build\notifications.patch
@@ -54,6 +50,7 @@ patch -p1 -d python/Lib/site-packages/deluge/ui/gtk3/glade -p1 < deluge-build\ta
 curl https://github.com/deluge-torrent/deluge/commit/b27ad9126655ca758e232e89dce70d6bdf69bd3b.patch | patch -d python/Lib/site-packages -p1
 curl https://github.com/deluge-torrent/deluge/commit/0e48c9712d579acfe3064b011d61ffef84c2bef5.patch | patch -d python/Lib/site-packages -p1
 patch -p1 -d python/Lib/site-packages/deluge/core -p1 < deluge-build\listen.patch
+curl https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/deluge/trunk/user-agent-override.diff | patch -d python/Lib/site-packages -p1
 copy python\Scripts\deluge.exe python
 copy python\Scripts\deluged.exe python
 copy python\Scripts\deluged-debug.exe python
