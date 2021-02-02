@@ -20,11 +20,9 @@ curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
 call msvc\VC\Auxiliary\Build\vcvars64.bat
 git clone https://github.com/wingtk/gvsbuild gtk-build\gvsbuild
 pushd gtk-build\gvsbuild
-copy "%~dp0win32.patch" patches\gtk3-24
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/a\            repo_url = 'https:\/\/gitlab.gnome.org\/GNOME\/gtk.git',\n            fetch_submodules = False,\n            tag = 'gtk-3-24'," gvsbuild\projects.py
-sed -i "/'gtk_update_icon_cache.patch',/a\                'win32.patch'," gvsbuild\projects.py
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash

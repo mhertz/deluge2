@@ -51,6 +51,7 @@ curl https://github.com/deluge-torrent/deluge/commit/b27ad9126655ca758e232e89dce
 curl https://github.com/deluge-torrent/deluge/commit/0e48c9712d579acfe3064b011d61ffef84c2bef5.patch | patch -d python/Lib/site-packages -p1
 patch -p1 -d python/Lib/site-packages/deluge/core -p1 < deluge-build\listen.patch
 curl https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/deluge/trunk/user-agent-override.diff | patch -d python/Lib/site-packages -p1
+patch -p1 --no-backup-if-mismatch -d python/Lib/site-packages -p1 < deluge-build\f7d5c624940b0b7d0c8081129e81202e1d35fcbd.patch
 copy python\Scripts\deluge.exe python
 copy python\Scripts\deluged.exe python
 copy python\Scripts\deluged-debug.exe python

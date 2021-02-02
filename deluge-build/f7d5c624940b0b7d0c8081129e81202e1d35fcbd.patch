@@ -1,0 +1,280 @@
+From f7d5c624940b0b7d0c8081129e81202e1d35fcbd Mon Sep 17 00:00:00 2001
+From: Christophe David <david.christophe@protonmail.com>
+Date: Thu, 20 Aug 2020 16:37:36 +0200
+Subject: [PATCH] geoip for ipv6
+
+---
+ deluge/core/core.py                           |  1 +
+ deluge/core/preferencesmanager.py             | 15 +++-
+ deluge/core/torrent.py                        | 11 ++-
+ .../modes/preferences/preference_panes.py     |  6 +-
+ deluge/ui/gtk3/glade/preferences_dialog.ui    | 75 ++++++++++++++++++-
+ deluge/ui/gtk3/preferences.py                 |  1 +
+ .../js/deluge-all/preferences/OtherPage.js    | 20 ++++-
+ 7 files changed, 120 insertions(+), 9 deletions(-)
+
+diff --git a/deluge/core/core.py b/deluge/core/core.py
+index 8498ff9a8..060831d96 100644
+--- a/deluge/core/core.py
++++ b/deluge/core/core.py
+@@ -159,6 +159,7 @@ def __init__(
+ 
+         # GeoIP instance with db loaded
+         self.geoip_instance = None
++        self.geoip_instance_v6 = None
+ 
+         # These keys will be dropped from the set_config() RPC and are
+         # configurable from the command-line.
+diff --git a/deluge/core/preferencesmanager.py b/deluge/core/preferencesmanager.py
+index 802ea865c..8052c8a08 100644
+--- a/deluge/core/preferencesmanager.py
++++ b/deluge/core/preferencesmanager.py
+@@ -123,6 +123,7 @@
+     'peer_tos': '0x00',
+     'rate_limit_ip_overhead': True,
+     'geoip_db_location': '/usr/share/GeoIP/GeoIP.dat',
++    'geoip_v6_db_location': '/usr/share/GeoIP/GeoIPv6.dat',
+     'cache_size': 512,
+     'cache_expiry': 60,
+     'auto_manage_prefer_seeds': False,
+@@ -477,7 +478,7 @@ def _on_set_rate_limit_ip_overhead(self, key, value):
+         self.core.apply_session_setting('rate_limit_ip_overhead', value)
+ 
+     def _on_set_geoip_db_location(self, key, geoipdb_path):
+-        # Load the GeoIP DB for country look-ups if available
++        # Load the GeoIP v4 DB for country look-ups if available
+         if os.path.exists(geoipdb_path):
+             try:
+                 self.core.geoip_instance = GeoIP.open(
+@@ -488,6 +489,21 @@ def _on_set_geoip_db_location(self, key, geoipdb_path):
+         else:
+             log.warning('Unable to find GeoIP database file: %s', geoipdb_path)
+ 
++    def _on_set_geoip_v6_db_location(self, key, geoipdb_path):
++        # Load the GeoIP v6 DB for country look-ups if available
++        if os.path.exists(geoipdb_path):
++            try:
++                self.core.geoip_instance_v6 = GeoIP(geoipdb_path, 0)
++            except AttributeError:
++                log.warning('GeoIP Unavailable')
++        elif os.path.exists('GeoIPv6.dat'):
++            try:
++                self.core.geoip_instance_v6 = GeoIP('GeoIPv6.dat', 0)
++            except AttributeError:
++                log.warning('GeoIP Unavailable')
++        else:
++            log.warning('Unable to find GeoIP database file: %s', geoipdb_path)
++
+     def _on_set_cache_size(self, key, value):
+         self.core.apply_session_setting('cache_size', value)
+ 
+diff --git a/deluge/core/torrent.py b/deluge/core/torrent.py
+index b69909cbb..7c6a39649 100644
+--- a/deluge/core/torrent.py
++++ b/deluge/core/torrent.py
+@@ -16,6 +16,7 @@
+ 
+ from __future__ import division, unicode_literals
+ 
++import ipaddress
+ import logging
+ import os
+ import socket
+@@ -817,8 +818,14 @@ def get_peers(self):
+                 client = 'unknown'
+ 
+             try:
+-                country = component.get('Core').geoip_instance.country_code_by_addr(
+-                    peer.ip[0]
++                country = (
++                    component.get('Core').geoip_instance.country_code_by_addr(
++                        peer.ip[0]
++                    )
++                    if ipaddress.ip_address(peer.ip[0]).version == 4
++                    else component.get(
++                        'Core'
++                    ).geoip_instance_v6.country_code_by_addr(peer.ip[0])
+                 )
+             except AttributeError:
+                 country = ''
+diff --git a/deluge/ui/console/modes/preferences/preference_panes.py b/deluge/ui/console/modes/preferences/preference_panes.py
+index 62029a6a9..9c3f3dd41 100644
+--- a/deluge/ui/console/modes/preferences/preference_panes.py
++++ b/deluge/ui/console/modes/preferences/preference_panes.py
+@@ -513,10 +513,14 @@ def create_pane(self, core_conf, console_config):
+             _('Yes, please send anonymous statistics.'),
+             core_conf['send_info'],
+         )
+-        self.add_header(_('GeoIP Database'), space_above=True)
++        self.add_header(_('GeoIP Database IPv4'), space_above=True)
+         self.add_text_input(
+             'geoip_db_location', 'Location:', core_conf['geoip_db_location']
+         )
++        self.add_header(_('GeoIP Database IPv6'), space_above=True)
++        self.add_text_input(
++            'geoip_v6_db_location', 'Location:', core_conf['geoip_v6_db_location']
++        )
+ 
+ 
+ class DaemonPane(BasePreferencePane):
+diff --git a/deluge/ui/gtk3/glade/preferences_dialog.ui b/deluge/ui/gtk3/glade/preferences_dialog.ui
+index 82cba1522..6ea0ae68a 100644
+--- a/deluge/ui/gtk3/glade/preferences_dialog.ui
++++ b/deluge/ui/gtk3/glade/preferences_dialog.ui
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<!-- Generated with glade 3.22.1 -->
++<!-- Generated with glade 3.22.2 -->
+ <interface>
+   <requires lib="gtk+" version="3.0"/>
+   <object class="GtkAdjustment" id="adjustment_cache_expiry">
+@@ -245,7 +245,7 @@
+     <property name="type_hint">dialog</property>
+     <signal name="configure-event" handler="on_pref_dialog_configure_event" swapped="no"/>
+     <signal name="delete-event" handler="on_pref_dialog_delete_event" swapped="no"/>
+-    <child>
++    <child type="titlebar">
+       <placeholder/>
+     </child>
+     <child internal-child="vbox">
+@@ -4268,7 +4268,7 @@ the proxy instead of using the local DNS service</property>
+                                   <object class="GtkLabel" id="label108">
+                                     <property name="visible">True</property>
+                                     <property name="can_focus">False</property>
+-                                    <property name="label" translatable="yes">GeoIP Database</property>
++                                    <property name="label" translatable="yes">GeoIP Database IPv4</property>
+                                     <attributes>
+                                       <attribute name="weight" value="bold"/>
+                                     </attributes>
+@@ -4282,6 +4282,73 @@ the proxy instead of using the local DNS service</property>
+                                 <property name="position">1</property>
+                               </packing>
+                             </child>
++                            <child>
++                              <object class="GtkFrame" id="frame23">
++                                <property name="visible">True</property>
++                                <property name="can_focus">False</property>
++                                <property name="label_xalign">0</property>
++                                <property name="shadow_type">none</property>
++                                <child>
++                                  <object class="GtkAlignment" id="alignment31">
++                                    <property name="visible">True</property>
++                                    <property name="can_focus">False</property>
++                                    <property name="top_padding">2</property>
++                                    <property name="left_padding">12</property>
++                                    <child>
++                                      <object class="GtkBox" id="box2">
++                                        <property name="visible">True</property>
++                                        <property name="can_focus">False</property>
++                                        <property name="spacing">5</property>
++                                        <child>
++                                          <object class="GtkLabel" id="label26">
++                                            <property name="visible">True</property>
++                                            <property name="can_focus">False</property>
++                                            <property name="label" translatable="yes">Location:</property>
++                                          </object>
++                                          <packing>
++                                            <property name="expand">False</property>
++                                            <property name="fill">False</property>
++                                            <property name="position">0</property>
++                                          </packing>
++                                        </child>
++                                        <child>
++                                          <object class="GtkEntry" id="entry_geoipv6">
++                                            <property name="visible">True</property>
++                                            <property name="can_focus">True</property>
++                                            <property name="tooltip_text" translatable="yes">If Deluge cannot find the database file at this location it will fallback to using DNS to resolve the peer's country.</property>
++                                            <property name="invisible_char">●</property>
++                                            <property name="truncate_multiline">True</property>
++                                            <property name="primary_icon_activatable">False</property>
++                                            <property name="secondary_icon_activatable">False</property>
++                                          </object>
++                                          <packing>
++                                            <property name="expand">False</property>
++                                            <property name="fill">True</property>
++                                            <property name="position">1</property>
++                                          </packing>
++                                        </child>
++                                      </object>
++                                    </child>
++                                  </object>
++                                </child>
++                                <child type="label">
++                                  <object class="GtkLabel" id="label34">
++                                    <property name="visible">True</property>
++                                    <property name="can_focus">False</property>
++                                    <property name="label" translatable="yes">GeoIP Database IPv6</property>
++                                    <attributes>
++                                      <attribute name="weight" value="bold"/>
++                                    </attributes>
++                                  </object>
++                                </child>
++                              </object>
++                              <packing>
++                                <property name="expand">False</property>
++                                <property name="fill">False</property>
++                                <property name="padding">5</property>
++                                <property name="position">2</property>
++                              </packing>
++                            </child>
+                             <child>
+                               <object class="GtkFrame" id="frame17">
+                                 <property name="visible">True</property>
+@@ -4361,7 +4428,7 @@ the proxy instead of using the local DNS service</property>
+                               <packing>
+                                 <property name="expand">False</property>
+                                 <property name="fill">False</property>
+-                                <property name="position">2</property>
++                                <property name="position">3</property>
+                               </packing>
+                             </child>
+                           </object>
+diff --git a/deluge/ui/gtk3/preferences.py b/deluge/ui/gtk3/preferences.py
+index 2a56309aa..6bbf7f860 100644
+--- a/deluge/ui/gtk3/preferences.py
++++ b/deluge/ui/gtk3/preferences.py
+@@ -392,6 +392,7 @@ def _show(self):
+             'chk_new_releases': ('active', 'new_release_check'),
+             'chk_send_info': ('active', 'send_info'),
+             'entry_geoip': ('text', 'geoip_db_location'),
++            'entry_geoipv6': ('text', 'geoip_v6_db_location'),
+             'combo_encin': ('active', 'enc_in_policy'),
+             'combo_encout': ('active', 'enc_out_policy'),
+             'combo_enclevel': ('active', 'enc_level'),
+diff --git a/deluge/ui/web/js/deluge-all/preferences/OtherPage.js b/deluge/ui/web/js/deluge-all/preferences/OtherPage.js
+index 153820357..1686f858c 100644
+--- a/deluge/ui/web/js/deluge-all-debug.js
++++ b/deluge/ui/web/js/deluge-all-debug.js
+@@ -82,7 +82,7 @@ Deluge.preferences.Other = Ext.extend(Ext.form.FormPanel, {
+         fieldset = this.add({
+             xtype: 'fieldset',
+             border: false,
+-            title: _('GeoIP Database'),
++            title: _('GeoIP IPv4 Database'),
+             autoHeight: true,
+             labelWidth: 80,
+             defaultType: 'textfield',
+@@ -96,5 +96,23 @@ Deluge.preferences.Other = Ext.extend(Ext.form.FormPanel, {
+                 width: 200,
+             })
+         );
++
++        fieldset = this.add({
++            xtype: 'fieldset',
++            border: false,
++            title: _('GeoIP IPv6 Database'),
++            autoHeight: true,
++            labelWidth: 80,
++            defaultType: 'textfield',
++        });
++        optMan.bind(
++            'geoip_v6_db_location',
++            fieldset.add({
++                name: 'geoip_v6_db_location',
++                fieldLabel: _('Path:'),
++                labelSeparator: '',
++                width: 200,
++            })
++        );
+     },
+ });
