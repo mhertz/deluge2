@@ -23,6 +23,8 @@ pushd gtk-build\gvsbuild
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/a\            repo_url = 'https:\/\/gitlab.gnome.org\/GNOME\/gtk.git',\n            fetch_submodules = False,\n            tag = 'gtk-3-24'," gvsbuild\projects.py
+mkdir %DOWNLOAD_DIR% 2>nul
+curl https://win.rustup.rs/x86_64 > %DOWNLOAD_DIR%\rustup-init.exe
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash
@@ -66,6 +68,7 @@ del gtk-build\gtk\x64\release\lib\gdk-pixbuf-2.0\2.10.0\loaders\*.pdb
 del gtk-build\gtk\x64\release\lib\gobject-introspection\giscanner\_giscanner.pdb
 move overlay\data\bin\msvcp140.dll gtk-build\gtk\x64\release\bin
 move overlay\data\etc\gtk-3.0\settings.ini gtk-build\gtk\x64\release\etc\gtk-3.0
+move overlay\data\share\themes\win32x gtk-build\gtk\x64\release\share\themes
 rd /s /q  overlay\data
 rd /s /q  overlay\data 2>nul
 move gtk-build\gtk\x64\release overlay\data
