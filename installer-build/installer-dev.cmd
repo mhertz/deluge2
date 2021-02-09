@@ -7,4 +7,3 @@ curl https://mailfud.org/geoip-legacy/GeoIP.dat.gz | gzip -d -c > ..\%var2%\GeoI
 curl https://mailfud.org/geoip-legacy/GeoIPv6.dat.gz | gzip -d -c > ..\%var2%\GeoIPv6.dat
 del ..\deluge-2*dev*.exe 2>nul
 ..\nsis\makensis /DPROGRAM_VERSION=%var2:~7% /Dsrcdir=..\%var2% deluge-installer.nsi
-pause

@@ -14,7 +14,6 @@ for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
-call msvc\VC\Auxiliary\Build\vcvars64.bat
 git clone https://github.com/wingtk/gvsbuild gtk-build\gvsbuild
 pushd gtk-build\gvsbuild
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
@@ -77,4 +76,3 @@ for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i\data
 for /f %%i in ('dir /b deluge-2* ^| findstr dev') do rd /s /q %%i\data 2>nul
 for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do xcopy /ehq overlay\data %%i\data\
 for /f %%i in ('dir /b deluge-2* ^| findstr dev') do xcopy /ehq overlay\data %%i\data\
-pause

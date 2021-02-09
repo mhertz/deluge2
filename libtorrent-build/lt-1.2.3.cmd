@@ -27,4 +27,3 @@ rd /s /q lt
 rd /s /q lt 2>nul
 rd /s /q python
 rd /s /q python 2>nul
-pause
