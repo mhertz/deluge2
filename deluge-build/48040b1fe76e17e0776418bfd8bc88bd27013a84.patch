@@ -65,7 +65,7 @@ index db9556acc..802ea865c 100644
          self.core.apply_session_settings(
              {
                  'listen_system_port_fallback': self.config['listen_use_sys_port'],
--                'listen_interfaces': ''.join(interfaces),
+-                'listen_interfaces': ','.join(interfaces),
 +                'listen_interfaces': ','.join(interface_port_list),
              }
          )
