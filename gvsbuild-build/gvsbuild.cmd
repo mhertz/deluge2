@@ -19,6 +19,7 @@ pushd gtk-build\gvsbuild
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/a\            repo_url = 'https:\/\/gitlab.gnome.org\/GNOME\/gtk.git',\n            fetch_submodules = False,\n            tag = 'gtk-3-24'," gvsbuild\projects.py
+sed -i "\|self.builder.opts.tools_root_dir, dir_part = self.dir_part, check_file = self.full_exe, check_mark=True)|a \        cmd = '%%s/usr/bin/sed -i \"s/paths=True/paths=False/\" %%s/%%s/mesonbuild/modules/gnome.py' %% (self.opts.msys_dir, self.opts.tools_root_dir, self.dir_part, )\n \       subprocess.check_call(cmd, shell=True)" gvsbuild\tools.py
 mkdir %DOWNLOAD_DIR% 2>nul
 curl https://win.rustup.rs/x86_64 > %DOWNLOAD_DIR%\rustup-init.exe
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
