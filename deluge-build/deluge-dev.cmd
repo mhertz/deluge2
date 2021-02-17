@@ -5,7 +5,6 @@ for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f
 mkdir python & curl -L https://www.python.org/ftp/python/%var2%/python-%var2%-embed-amd64.zip | bsdtar xf - -C python
 sed -i 's/#import/import/' python/python*._pth
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
-python\Scripts\pip install setuptools==52.0.0
 for /f %%i in ('dir /b deluge-build\pycairo-*-win_amd64.whl') do python\Scripts\pip install deluge-build\%%i
 for /f %%i in ('dir /b deluge-build\PyGObject-*-win_amd64.whl') do python\Scripts\pip install deluge-build\%%i
 python\Scripts\pip install pygeoip
