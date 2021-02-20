@@ -19,27 +19,8 @@ git clone https://github.com/wingtk/gvsbuild gtk-build\gvsbuild
 pushd gtk-build\gvsbuild
 for /f %%a in ('grep "dir_part = 'meson" gvsbuild\tools.py ^| cut -d^"^'^" -f2') do %MSYSPATH%\echo %BUILD_DIR%/tools/%%a >> ..\..\python\python%PYTHONVER%._pth
 %MSYSPATH%\echo %BUILD_DIR%/build/x64/release/adwaita-icon-theme/win32 >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/adwaita-icon-theme >> ..\..\python\python%PYTHONVER%._pth
 %MSYSPATH%\echo %BUILD_DIR%/build/x64/release/librsvg/win32 >> ..\..\python\python%PYTHONVER%._pth
 %MSYSPATH%\echo %BUILD_DIR%/build/x64/release/libcroco/win32 >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/atk >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/atk/atk >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib/gobject >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib/glib >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gio >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gio/win32 >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/gir >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/giscanner >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/girepository >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/tools >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/subprojects >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/misc >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/m4 >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples/girepository >> ..\..\python\python%PYTHONVER%._pth
-%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples/library >> ..\..\python\python%PYTHONVER%._pth
 sed -i 's.\\\./.g' ..\..\python\python%PYTHONVER%._pth
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
@@ -51,7 +32,7 @@ rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash
 del %DOWNLOAD_DIR%\git\gtk3-*
-python -E build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path="%MSVC_DIR%" --python-dir="%PYTHON_PATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
+python build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path="%MSVC_DIR%" --python-dir="%PYTHON_PATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
 popd
 rd /s /q python
 rd /s /q python
