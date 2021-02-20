@@ -13,9 +13,34 @@ set VSCMD_DEBUG=1
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
+%MSYSPATH%\echo -e Lib\nDLLs\nimport site >> python\python%PYTHONVER%._pth
 curl https://bootstrap.pypa.io/get-pip.py | python\python.exe
 git clone https://github.com/wingtk/gvsbuild gtk-build\gvsbuild
 pushd gtk-build\gvsbuild
+for /f %%a in ('grep "dir_part = 'meson" gvsbuild\tools.py ^| cut -d^"^'^" -f2') do %MSYSPATH%\echo %BUILD_DIR%/tools/%%a >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/adwaita-icon-theme/win32 >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/adwaita-icon-theme >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/librsvg/win32 >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/libcroco/win32 >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/atk >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/atk/atk >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib/gobject >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/glib/glib >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gio >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gio/win32 >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/gir >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/giscanner >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/girepository >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/tools >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/subprojects >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/misc >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/m4 >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples/girepository >> ..\..\python\python%PYTHONVER%._pth
+%MSYSPATH%\echo %BUILD_DIR%/build/x64/release/gobject-introspection/examples/library >> ..\..\python\python%PYTHONVER%._pth
+sed -i 's.\\\./.g' ..\..\python\python%PYTHONVER%._pth
 sed -i 's/gtk3_24(Tarball/gtk3_24(GitRepo/' gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/{n;N;d}" gvsbuild\projects.py
 sed -i "/prj_dir='gtk3-24',/a\            repo_url = 'https:\/\/gitlab.gnome.org\/GNOME\/gtk.git',\n            fetch_submodules = False,\n            tag = 'gtk-3-24'," gvsbuild\projects.py
