@@ -46,7 +46,6 @@ bsdtar xf python/Lib/site-packages/deluge/plugins/Notifications*.egg
 patch -p1 -d deluge_notifications < deluge-build\notifications.patch
 bsdtar cf python/Lib/site-packages/deluge/plugins/Notifications* --format zip EGG-INFO deluge_notifications
 rd /s /q EGG-INFO deluge_notifications
-patch -p1 -d python/Lib/site-packages/deluge/ui/gtk3/glade -p1 < deluge-build\tabs.patch
 curl https://github.com/deluge-torrent/deluge/commit/b27ad9126655ca758e232e89dce70d6bdf69bd3b.patch | patch -d python/Lib/site-packages -p1
 curl https://github.com/deluge-torrent/deluge/commit/0e48c9712d579acfe3064b011d61ffef84c2bef5.patch | patch -d python/Lib/site-packages -p1
 patch -p1 -d python/Lib/site-packages/deluge/core -p1 < deluge-build\listen.patch
