@@ -10,6 +10,7 @@ mkdir boost & curl -L https://dl.bintray.com/boostorg/release/1.70.0/source/boos
 git clone https://github.com/arvidn/libtorrent -b libtorrent-1_2_3 lt
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
+for /f %%i in ('echo %var2% ^| cut -d. -f1-2') do set PYTHONVER2=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 msys64\usr\bin\echo -e "Lib\nDLLs\nimport site" >> python\python%PYTHONVER%._pth
 call msvc\VC\Auxiliary\Build\vcvars64.bat
