@@ -39,8 +39,8 @@ patch python/Lib/site-packages/deluge/core/preferencesmanager.py < deluge-build\
 curl https://github.com/deluge-torrent/deluge/commit/543a91bd9b06ceb3eee35ff4e7e8f0225ee55dc5.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
-patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
-patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
+curl -L https://github.com/wingtk/gvsbuild/raw/master/patches/pycairo/pycairo_py3_8_load_dll.patch | patch -R python/Lib/site-packages/cairo/__init__.py
+curl -L https://github.com/wingtk/gvsbuild/raw/master/patches/pygobject/pygobject_py3_8_load_dll.patch | patch -R python/Lib/site-packages/gi/__init__.py
 patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch < deluge-build\48040b1fe76e17e0776418bfd8bc88bd27013a84.patch
 bsdtar xf python/Lib/site-packages/deluge/plugins/Notifications*.egg
 patch -p1 -d deluge_notifications < deluge-build\notifications.patch

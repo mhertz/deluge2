@@ -45,8 +45,8 @@ patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch < deluge-build\2.0
 curl -k https://git.deluge-torrent.org/deluge/patch/?id=4b29436cd5eabf9af271f3fa6250cd7c91cdbc9d | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
-patch -R python/Lib/site-packages/cairo/__init__.py < deluge-build\pycairo_py3_8_load_dll.patch
-patch -R python/Lib/site-packages/gi/__init__.py < deluge-build\pygobject_py3_8_load_dll.patch
+curl -L https://github.com/wingtk/gvsbuild/raw/master/patches/pycairo/pycairo_py3_8_load_dll.patch | patch -R python/Lib/site-packages/cairo/__init__.py
+curl -L https://github.com/wingtk/gvsbuild/raw/master/patches/pygobject/pygobject_py3_8_load_dll.patch | patch -R python/Lib/site-packages/gi/__init__.py
 bsdtar xf python/Lib/site-packages/deluge/plugins/Execute*.egg
 curl https://github.com/deluge-torrent/deluge/commit/9c90136f57b607937a6deb64481e6785421fd455.patch | patch -p4
 bsdtar cf python/Lib/site-packages/deluge/plugins/Execute* --format zip EGG-INFO deluge_execute
