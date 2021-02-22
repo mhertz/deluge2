@@ -67,6 +67,17 @@ rd /s /q gtk-build\gtk\x64\release\share\man
 rd /s /q gtk-build\gtk\x64\release\share\pkgconfig
 rd /s /q gtk-build\gtk\x64\release\share\thumbnailers
 rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\cursors
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\16x16
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\22x22
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\24x24
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\256x256
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\32x32
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\48x48
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\512x512
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\64x64
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\8x8
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\96x96
+rd /s /q gtk-build\gtk\x64\release\share\icons\Adwaita\scalable-up-to-32
 del gtk-build\gtk\x64\release\lib\gdk-pixbuf-2.0\2.10.0\loaders\*.pdb
 del gtk-build\gtk\x64\release\lib\gobject-introspection\giscanner\_giscanner.pdb
 move overlay\data\bin\msvcp140.dll gtk-build\gtk\x64\release\bin
