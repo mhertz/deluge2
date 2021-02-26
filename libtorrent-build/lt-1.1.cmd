@@ -20,7 +20,7 @@ call bootstrap.bat
 popd
 pushd lt\bindings\python
 echo using python : %PYTHONVER2% : %PYTHON_ROOT2% : %PYTHON_ROOT2%/include : %PYTHON_ROOT2%/libs ; > %BOOST_BUILD_PATH%\user-config.jam
-b2 crypto=openssl libtorrent-link=static boost-link=static release optimization=speed stage_module --abbreviate-paths -j4 address-model=64 openssl-include=%OPENSSL%\include openssl-lib=%OPENSSL%\lib
+b2 crypto=openssl libtorrent-link=static boost-link=static release optimization=speed stage_module --abbreviate-paths -j4 address-model=64 openssl-include=%OPENSSL%\include openssl-lib=%OPENSSL%\lib cflags="/GL" linkflags="/LTCG"
 popd
 copy /y lt\bindings\python\libtorrent.pyd libtorrent\lt1.1\Lib\site-packages
 rd /s /q boost
