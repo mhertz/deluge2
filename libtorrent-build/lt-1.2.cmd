@@ -19,7 +19,7 @@ call bootstrap.bat
 popd
 pushd lt\bindings\python
 echo using python : %PYTHONVER2% : %PYTHON_ROOT2% : %PYTHON_ROOT2%/include : %PYTHON_ROOT2%/libs ; > %BOOST_BUILD_PATH%\user-config.jam
-b2 crypto=openssl libtorrent-link=static boost-link=static release optimization=speed stage_module --abbreviate-paths -j4 address-model=64 openssl-include=%OPENSSL%\include openssl-lib=%OPENSSL%\lib lto=on lto-mode=full
+b2 crypto=openssl libtorrent-link=static boost-link=static release optimization=speed stage_module --abbreviate-paths -j4 address-model=64 openssl-include=%OPENSSL%\include openssl-lib=%OPENSSL%\lib lto=on
 popd
 copy /y lt\bindings\python\libtorrent.pyd overlay\Lib\site-packages
 for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do copy /y lt\bindings\python\libtorrent.pyd %%i\Lib\site-packages
