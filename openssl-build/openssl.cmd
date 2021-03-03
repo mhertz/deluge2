@@ -1,16 +1,22 @@
 cd "%~dp0"
 cd ..
-set PATH=%cd%\msys64\usr\bin;%PATH%
-for /f %%i in ('git ls-remote --tags https://github.com/openssl/openssl ^| grep -E 'OpenSSL_[0-9]_[0-9]_[0-9][a-z]' ^| cut -d/ -f3 ^| tr -d "^{}" ^| cut -d_ -f2-4') do set var=%%i
-curl -O https://slproweb.com/download/Win64OpenSSL-%var%.exe
-openssl-build\innounp.exe -x Win64OpenSSL-%var%.exe
+set OUT_DIR="%cd%\OpenSSL-Win64"
+set NASM_PATH="%cd%\nasm"
+set PERL_PATH="%cd%\perl\perl\bin"
+set MSYSPATH="%cd%\msys64\usr\bin"
+set PATH=%NASM_PATH%;%PERL_PATH%;%MSYSPATH%;%PATH%
 rd /s /q OpenSSL-Win64
-rd /s /q OpenSSL-Win64 2>nul
-move {app} OpenSSL-Win64
-rd /s /q {cf}
-rd /s /q {cf} 2>nul
-del install_script.iss
-copy /y OpenSSL-Win64\*.dll overlay\Lib\site-packages
-for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do copy /y OpenSSL-Win64\*.dll %%i\Lib\site-packages
-for /f %%i in ('dir /b deluge-2* ^| findstr dev') do copy /y OpenSSL-Win64\*.dll %%i\Lib\site-packages
-del Win64OpenSSL-%var%.exe
+rd /s /q OpenSSL-Win64
+for /f %%i in ('git ls-remote --tags https://github.com/openssl/openssl ^| grep -E 'OpenSSL_[0-9]_[0-9]_[0-9][a-z]' ^| cut -d/ -f3 ^| tr -d "^{}"') do set var=%%i
+git clone https://github.com/openssl/openssl -b %var% openssl-build\openssl
+call msvc\VC\Auxiliary\Build\vcvars64.bat
+cd openssl-build\openssl
+perl configure VC-WIN64A --prefix=%OUT_DIR% --openssldir=%OUT_DIR% CFLAGS="/W3 /wd4090 /nologo /O2 /GL" LDFLAGS="/nologo /debug /LTCG"
+nmake
+nmake install
+cd ..\..
+rd /s /q openssl-build\openssl
+rd /s /q openssl-buid\openssl
+copy /y OpenSSL-Win64\bin\*.dll overlay\Lib\site-packages
+for /f %%i in ('dir /b deluge-2* ^| findstr /v dev') do copy /y OpenSSL-Win64\bin\*.dll %%i\Lib\site-packages
+for /f %%i in ('dir /b deluge-2* ^| findstr dev') do copy /y OpenSSL-Win64\bin\*.dll %%i\Lib\site-packages

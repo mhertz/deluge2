@@ -78,6 +78,8 @@ python\python.exe deluge-build\fixdeluge-web.py
 xcopy /ehq overlay python
 del python\Lib\site-packages\easy_install.py
 del python\Lib\site-packages\PyWin32.chm
+del python\libssl-*.dll
+del python\libcrypto-*.dll
 rd /s /q python\Lib\site-packages\PIL
 rd /s /q python\Lib\idlelib
 rd /s /q python\Lib\distutils
