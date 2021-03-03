@@ -6,7 +6,6 @@ del msys2-base-x86_64-latest.sfx.exe
 bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -S diffutils patch git --noconfirm"
-cmd /c openssl-build\openssl.cmd
 for /f %%i in ('curl https://nsis.sourceforge.io/Download ^| grep Notes ^| grep -o v.* ^| tr -d v ^| cut -d'^"' -f1') do set var=%%i
 mkdir nsis & curl -L "https://sourceforge.net/projects/nsis/files/NSIS %var:~0,1%/%var%/nsis-%var%.zip/download" | bsdtar xf - --strip-components 1 -C nsis
 curl.exe -kO https://nsis.sourceforge.io/mediawiki/images/1/18/NsProcess.zip
