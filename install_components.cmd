@@ -1,6 +1,6 @@
 cd "%~dp0"
 set PATH=%~dp0msys64\usr\bin;%PATH%
-powershell -executionpolicy remotesigned -Command "Invoke-WebRequest https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe -OutFile msys2-base-x86_64-latest.sfx.exe"
+powershell -executionpolicy remotesigned -Command "Start-BitsTransfer "http://repo.msys2.org/distrib/msys2-x86_64-latest.sfx.exe"
 msys2-base-x86_64-latest.sfx.exe
 del msys2-base-x86_64-latest.sfx.exe
 bash -lic "pacman -Syu --noconfirm"
