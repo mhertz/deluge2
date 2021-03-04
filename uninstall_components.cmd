@@ -3,4 +3,5 @@ rd /s /q msys64
 rd /s /q msys64 2>nul
 rd /s /q nsis
 rd /s /q nsis 2>nul
-"%programfiles(x86)%\Microsoft Visual Studio\Installer\vs_installer.exe" --installPath "%~dp0msvc" /uninstall -q
+net sess>nul 2>&1||(echo(CreateObject("Shell.Application"^).ShellExecute"%~0",,,"RunAs",1:CreateObject("Scripting.FileSystemObject"^).DeleteFile(wsh.ScriptFullName^)>"%temp%\%~nx0.vbs"&start wscript.exe "%temp%\%~nx0.vbs"&exit)
+"%programfiles(x86)%\Microsoft Visual Studio\Installer\vs_installer.exe" uninstall --installPath "%~dp0msvc" --q
