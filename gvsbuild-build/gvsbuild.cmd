@@ -2,7 +2,6 @@ cd "%~dp0"
 cd ..
 set DOWNLOAD_DIR="%cd%\gtk-cache"
 set BUILD_DIR="%cd%\gtk-build"
-set MSVC_DIR="%cd%\msvc"
 set PYTHON_PATH="%cd%\python"
 set MSYSPATH="%cd%\msys64\usr\bin"
 set PATH=%PYTHON_PATH%;%PYTHON_PATH%\Scripts;%cd%\gtk-build\gtk\x64\release\bin;%MSYSPATH%;%PATH%
@@ -10,6 +9,7 @@ set platform=x64
 set VS_VER=16
 set arch=amd64
 set VSCMD_DEBUG=1
+for /f %%i in ('"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0^,17.0^) -prerelease -products * -property installationPath') do set MSVC_DIR="%%i"
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1

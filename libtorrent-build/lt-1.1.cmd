@@ -14,7 +14,7 @@ for /f %%i in ('echo %var2% ^| cut -d. -f1-2') do set PYTHONVER2=%%i
 mkdir python & curl -L https://www.nuget.org/api/v2/package/python/%var2% | bsdtar xf - -C python --include tools --strip-components 1
 msys64\usr\bin\echo -e "Lib\nDLLs\nimport site" >> python\python%PYTHONVER%._pth
 patch --binary boost/libs/python/src/converter/builtin_converters.cpp < "%~dp01.1-builtin_converters.patch"
-call msvc\VC\Auxiliary\Build\vcvars64.bat
+for /f %%i in ('"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0^,17.0^) -prerelease -products * -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
 pushd boost
 call bootstrap.bat
 popd
