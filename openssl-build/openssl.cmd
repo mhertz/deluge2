@@ -9,7 +9,7 @@ rd /s /q OpenSSL-Win64
 rd /s /q OpenSSL-Win64
 for /f %%i in ('git ls-remote --tags https://github.com/openssl/openssl ^| grep -E 'OpenSSL_[0-9]_[0-9]_[0-9][a-z]' ^| cut -d/ -f3 ^| tr -d "^{}"') do set var=%%i
 git clone https://github.com/openssl/openssl -b %var% openssl-build\openssl
-for /f %%i in ('"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0^,17.0^) -prerelease -products * -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
+for /f "delims=#" %%i in ('"%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0^,17.0^) -prerelease -products * -property installationPath') do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
 cd openssl-build\openssl
 perl configure VC-WIN64A --prefix=%OUT_DIR% --openssldir=%OUT_DIR% CFLAGS="/W3 /wd4090 /nologo /O2 /GL" LDFLAGS="/nologo /debug /LTCG"
 nmake
