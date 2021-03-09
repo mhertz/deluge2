@@ -19,7 +19,8 @@ for /f %%i in ('curl https://strawberryperl.com/ ^| grep download/[0-9] ^| cut -
 mkdir perl
 curl -O https://strawberryperl.com/download/%var%/strawberry-perl-%var%-64bit.zip
 bsdtar xf strawberry-perl-%var%-64bit.zip --exclude="^c" -C perl
-if exist "%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" "%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0,17.0) -prerelease -products * -nologo | findstr . || curl -LO https://aka.ms/vs/16/release/vs_BuildTools.exe && vs_BuildTools.exe --quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath "%~dp0msvc" --wait && del vs_BuildTools.exe
+if exist "%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" "%programfiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -version [16.0,17.0) -prerelease -products * -nologo | findstr . && set dirty=1
+if not defined dirty curl -LO https://aka.ms/vs/16/release/vs_BuildTools.exe && vs_BuildTools.exe --quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --installPath "%~dp0msvc" --wait && del vs_BuildTools.exe
 del msys2-base-x86_64-latest.* NsProcess.zip strawberry-perl-*-64bit.zip
 rd /s /q nsprocess
 rd /s /q nsprocess 2>nul
