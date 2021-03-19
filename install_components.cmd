@@ -1,8 +1,8 @@
 cd "%~dp0"
 set PATH=%~dp0msys64\usr\bin;%PATH%
 powershell -executionpolicy remotesigned -Command "Start-BitsTransfer "http://repo.msys2.org/distrib/msys2-x86_64-latest.sfx.exe"
-msys2-base-x86_64-latest.sfx.exe
-del msys2-base-x86_64-latest.sfx.exe
+msys2-x86_64-latest.sfx.exe
+del msys2-x86_64-latest.sfx.exe
 bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -Syu --noconfirm"
 bash -lic "pacman -S diffutils patch git --noconfirm"
