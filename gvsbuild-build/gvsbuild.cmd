@@ -32,7 +32,7 @@ rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 rd /s /q %DOWNLOAD_DIR%\git-exp\gtk3
 del %DOWNLOAD_DIR%\git-exp\gtk3.hash
 del %DOWNLOAD_DIR%\git\gtk3-*
-python build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path="%MSVC_DIR%" --python-dir="%PYTHON_PATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
+python build.py -d build --gtk3-ver=3.24 --archives-download-dir=%DOWNLOAD_DIR% --build-dir="%BUILD_DIR%" --msys-dir="%MSYSPATH:~1,-9%" --vs-ver=%VS_VER% --platform=x64 --vs-install-path=%MSVC_DIR% --python-dir="%PYTHON_PATH%" -k --enable-gi --py-wheel --python-ver=%var2% enchant gtk3-full pycairo pygobject lz4 --skip gtksourceview3,emeus,clutter --capture-out --print-out
 popd
 rd /s /q python
 rd /s /q python
