@@ -36,7 +36,6 @@ patch python/Lib/site-packages/twisted/internet/_glibbase.py < deluge-build\_gli
 patch python/Lib/site-packages/deluge/ui/client.py < deluge-build\client.patch
 patch python/Lib/site-packages/deluge/ui/gtk3/common.py < deluge-build\common.patch
 patch python/Lib/site-packages/deluge/core/preferencesmanager.py < deluge-build\preferencesmanager.patch
-curl https://github.com/deluge-torrent/deluge/commit/543a91bd9b06ceb3eee35ff4e7e8f0225ee55dc5.patch | patch -d python/Lib/site-packages -p1 --no-backup-if-mismatch
 patch python/Lib/site-packages/deluge/log.py < deluge-build\logging.patch
 patch python/Lib/site-packages/deluge/ui/console/modes/basemode.py < deluge-build\consoleCommandLineOnWin.patch
 curl -L https://github.com/wingtk/gvsbuild/raw/master/patches/pycairo/pycairo_py3_8_load_dll.patch | patch -R python/Lib/site-packages/cairo/__init__.py
