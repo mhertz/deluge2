@@ -12,7 +12,7 @@ curl.exe -kO https://nsis.sourceforge.io/mediawiki/images/1/18/NsProcess.zip
 mkdir nsprocess & bsdtar xf NsProcess.zip -C nsprocess
 move nsprocess\Plugin\nsProcessW.dll nsis\Plugins\x86-unicode\nsProcess.dll
 move nsprocess\Include\nsProcess.nsh nsis\Include
-curl.exe -k https://git.landicorp.com/electron-downloadtool/electron-downloadtool/-/raw/5da62a7d62329bd9afe7a1bfda3f759d6bc04c80/node_modules/electron-builder/templates/nsis/include/StrContains.nsh > nsis\Include\strContains.nsh
+curl.exe https://raw.githubusercontent.com/cleitet/wpkg-gp/master/setup/include/StrContains.nsi > nsis\Include\strContains.nsh
 for /f %%i in ('curl https://www.nasm.us/ ^| grep releasebuilds/[0-9] ^| cut -d^'^"^' -f2') do set var=%%i
 mkdir nasm & curl -L %var%win64/nasm-%var:~42,-1%-win64.zip | bsdtar xf - --strip-components 1 -C nasm
 for /f %%i in ('curl https://strawberryperl.com/ ^| grep download/[0-9] ^| cut -d/ -f3') do set var=%%i
