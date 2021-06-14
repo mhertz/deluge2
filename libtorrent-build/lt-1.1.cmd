@@ -6,7 +6,7 @@ set PYTHON_ROOT2="%PYTHON_ROOT:\=/%"
 set OPENSSL=%cd%\OpenSSL-Win64
 set BOOST_BUILD_PATH=%BOOST_ROOT%\tools\build
 set PATH=%PATH%;%BOOST_BUILD_PATH%\src\engine\bin.ntx86_64;%BOOST_ROOT%;%cd%\python;%cd%\msys64\usr\bin
-mkdir boost & curl -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.zip | bsdtar xf - --strip-components 1 -C boost
+mkdir boost & curl -L https://boostorg.jfrog.io/artifactory/main/release/1.66.0/source/boost_1_66_0.zip | bsdtar xf - --strip-components 1 -C boost
 git clone https://github.com/arvidn/libtorrent -b RC_1_1 lt
 for /f %%i in ('curl -s https://www.python.org/ ^| grep "Latest: " ^| cut -d/ -f5 ^| cut -d" " -f2 ^| tr -d "<"') do set var2=%%i
 for /f %%i in ('echo %var2% ^| cut -d. -f1-2 ^| tr -d .') do set PYTHONVER=%%i
